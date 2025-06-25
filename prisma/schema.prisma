@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LineOfBusiness {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String    @unique
+  description String?
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  products    InsuranceProduct[]
+}
+
+model ScreenConfiguration {
+  id          String    @id @default(uuid()) @db.Uuid
+  screenKey   String    @unique
+  screenName  String
+  description String?
+  config      Json      @db.JsonB
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Relations
+  products    InsuranceProduct[]
+}
+
+model InsuranceProduct {
+  id            String    @id @default(uuid()) @db.Uuid
+  productKey    String    @unique
+  productName   String
+  description   String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  // Foreign keys
+  lobId         String?   @db.Uuid
+  screenConfigId String   @db.Uuid
+  
+  // Relations
+  lob           LineOfBusiness? @relation(fields: [lobId], references: [id])
+  screenConfig  ScreenConfiguration @relation(fields: [screenConfigId], references: [id])
+}

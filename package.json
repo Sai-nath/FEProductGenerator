@@ -1,0 +1,21 @@
+{
+  "name": "insurance-screen-builder",
+  "version": "1.0.0",
+  "description": "Insurance screen builder with PostgreSQL and Prisma",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "prisma:generate": "npm run prisma:generate --workspace=@screen-builder/backend",
+    "prisma:migrate": "npm run prisma:migrate --workspace=@screen-builder/backend",
+    "prisma:studio": "npm run prisma:studio --workspace=@screen-builder/backend",
+    "dev:backend": "npm run dev --workspace=@screen-builder/backend",
+    "dev:frontend": "npm run dev --workspace=@screen-builder/frontend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build": "npm run build --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
