@@ -21,8 +21,9 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Widget, SelectOption } from '@screen-builder/common';
-import DependencyEditor, { WidgetDependency } from './DependencyEditor';
+import { Widget, SelectOption, WidgetDependency, TableColumn } from '@screen-builder/common';
+import DependencyEditor from './DependencyEditor';
+import TableWidgetConfig from './TableWidgetConfig';
 
 // Local implementation of WidgetType enum to avoid ESM/CommonJS issues
 enum WidgetType {
@@ -58,6 +59,7 @@ const WidgetEditor = ({ widget, onUpdate, onDelete, allWidgets = [] }: WidgetEdi
   const [expanded, setExpanded] = useState(false);
   const [advancedExpanded, setAdvancedExpanded] = useState(false);
   const [dependencyExpanded, setDependencyExpanded] = useState(false);
+  const [tableConfigExpanded, setTableConfigExpanded] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, checked, type } = e.target;
@@ -295,6 +297,42 @@ const WidgetEditor = ({ widget, onUpdate, onDelete, allWidgets = [] }: WidgetEdi
           />
         </AccordionDetails>
       </Accordion>
+      
+      {/* Table Configuration */}
+      {widget.type === WidgetType.TABLE && (
+        <Accordion expanded={tableConfigExpanded} onChange={() => setTableConfigExpanded(!tableConfigExpanded)}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Table Configuration</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <TableWidgetConfig
+              config={{
+                id: widget.id,
+                label: widget.label,
+                field: widget.field,
+                columns: widget.columns || [],
+                minRows: widget.minRows || 1,
+                maxRows: widget.maxRows,
+                allowAddRows: widget.allowAddRows !== false,
+                allowDeleteRows: widget.allowDeleteRows !== false,
+                showRowNumbers: widget.showRowNumbers !== false,
+                showTotals: widget.showTotals === true
+              }}
+              onChange={(tableConfig) => {
+                onUpdate({
+                  columns: tableConfig.columns,
+                  minRows: tableConfig.minRows,
+                  maxRows: tableConfig.maxRows,
+                  allowAddRows: tableConfig.allowAddRows,
+                  allowDeleteRows: tableConfig.allowDeleteRows,
+                  showRowNumbers: tableConfig.showRowNumbers,
+                  showTotals: tableConfig.showTotals
+                });
+              }}
+            />
+          </AccordionDetails>
+        </Accordion>
+      )}
       
       {/* Dependency Configuration */}
       {(widget.type === WidgetType.TEXT || 

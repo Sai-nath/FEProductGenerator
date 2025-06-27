@@ -17,14 +17,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-
-// Define dependency types
-export interface WidgetDependency {
-  parentFieldId: string;
-  condition: 'equals' | 'notEquals' | 'contains' | 'notContains' | 'isEmpty' | 'isNotEmpty';
-  value?: string | string[];
-  action: 'show' | 'hide' | 'enable' | 'disable' | 'require' | 'optional';
-}
+import { WidgetDependency } from '@screen-builder/common';
 
 interface DependencyEditorProps {
   widgetId: string;

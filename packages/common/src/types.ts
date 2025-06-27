@@ -54,6 +54,21 @@ export interface Section {
   widgets: Widget[];
 }
 
+// TableWidget column definition
+
+export interface TableRow {
+  id: string;
+  cells: Record<string, any>;
+  isValid?: boolean;
+}
+
+export interface WidgetDependency {
+  parentFieldId: string;
+  condition: 'equals' | 'notEquals' | 'contains' | 'notContains' | 'isEmpty' | 'isNotEmpty';
+  value?: string | string[];
+  action: 'show' | 'hide' | 'enable' | 'disable' | 'require' | 'optional';
+}
+
 export interface Widget {
   id: string;
   type: WidgetType;
@@ -71,6 +86,16 @@ export interface Widget {
   metadata?: Record<string, any>;
   min?: number;
   max?: number;
+  // Table widget specific properties
+  columns?: TableColumn[];
+  minRows?: number;
+  maxRows?: number;
+  allowAddRows?: boolean;
+  allowDeleteRows?: boolean;
+  showRowNumbers?: boolean;
+  showTotals?: boolean;
+  // Dependency properties
+  dependency?: WidgetDependency;
 }
 
 export enum WidgetType {
@@ -119,14 +144,25 @@ export interface TableConfig {
 }
 
 export interface TableColumn {
-  field: string;
-  headerName: string;
-  width?: number;
-  type?: 'string' | 'number' | 'date' | 'boolean' | 'actions';
-  editable?: boolean;
-  sortable?: boolean;
-  filterable?: boolean;
+  id: string; // Unique identifier for the column
+  field?: string; // Field name in data source
+  header: string; // Display name
+  headerName?: string; // Alternative display name (for backward compatibility)
+  width?: string | number; // Column width
+  type: 'text' | 'number' | 'select' | 'checkbox' | 'switch' | 'formula' | 'string' | 'date' | 'boolean' | 'actions';
+  editable?: boolean; // Whether the column is editable
+  required?: boolean; // Whether the column is required
+  sortable?: boolean; // Whether the column can be sorted
+  filterable?: boolean; // Whether the column can be filtered
+  options?: SelectOption[]; // Options for select type columns
+  formula?: string; // Formula for calculated columns
+  defaultValue?: any; // Default value for the column
   renderCell?: string; // Name of the custom renderer function
+  validation?: {
+    min?: number;
+    max?: number;
+    pattern?: string;
+  };
 }
 
 export interface TableAction {

@@ -19,6 +19,7 @@ import {
   Chip,
   ListItemText
 } from '@mui/material';
+import TableWidget, { TableColumn, TableRow as TableRowType } from './TableWidget';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
@@ -67,6 +68,17 @@ interface Widget {
   options?: SelectOption[];
   width?: string;
   dependency?: WidgetDependency;
+  // Table widget specific properties
+  columns?: TableColumn[];
+  minRows?: number;
+  maxRows?: number;
+  allowAddRows?: boolean;
+  allowDeleteRows?: boolean;
+  showRowNumbers?: boolean;
+  showTotals?: boolean;
+  // Slider widget specific properties
+  min?: number;
+  max?: number;
 }
 
 interface WidgetPreviewProps {
@@ -410,6 +422,24 @@ const WidgetPreview: React.FC<WidgetPreviewProps> = ({
             )}
             <hr style={{ border: 'none', borderTop: '1px solid rgba(0, 0, 0, 0.12)' }} />
           </Box>
+        );
+        
+      case WidgetType.TABLE:
+        return (
+          <TableWidget
+            id={widget.id}
+            label={widget.label}
+            columns={(widget.columns || []) as TableColumn[]}
+            initialRows={formValues[widget.field] || []}
+            minRows={widget.minRows || 1}
+            maxRows={widget.maxRows}
+            allowAddRows={widget.allowAddRows !== false}
+            allowDeleteRows={widget.allowDeleteRows !== false}
+            readOnly={!isEnabled}
+            showRowNumbers={widget.showRowNumbers !== false}
+            showTotals={widget.showTotals === true}
+            onChange={(rows: TableRowType[]) => handleChange(rows)}
+          />
         );
         
       default:
