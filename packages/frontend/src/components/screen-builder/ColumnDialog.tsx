@@ -29,7 +29,14 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import { TableColumn, SelectOption } from '@screen-builder/common';
+import { TableColumn } from '@screen-builder/common';
+
+// Define SelectOption locally to avoid import issues
+interface SelectOption {
+  value: string | number;
+  label: string;
+  disabled?: boolean;
+}
 import { v4 as uuidv4 } from 'uuid';
 
 const columnTypes = [

@@ -20,8 +20,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { TableColumn } from '@screen-builder/common';
-import ColumnDialog from './ColumnDialog.tsx';
-
+import ColumnDialog from './ColumnDialog';
 const columnTypes = [
   { value: 'text', label: 'Text' },
   { value: 'number', label: 'Number' },

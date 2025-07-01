@@ -21,9 +21,17 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import { Widget, SelectOption, WidgetDependency, TableColumn } from '@screen-builder/common';
+import { Widget, WidgetDependency, TableColumn } from '@screen-builder/common';
+
+// Define SelectOption locally to avoid import issues
+interface SelectOption {
+  value: string | number;
+  label: string;
+  disabled?: boolean;
+}
 import DependencyEditor from './DependencyEditor';
 import TableWidgetConfig from './TableWidgetConfig';
+import WidgetApiBindingPanel from './WidgetApiBindingPanel';
 
 // Local implementation of WidgetType enum to avoid ESM/CommonJS issues
 enum WidgetType {
@@ -237,6 +245,22 @@ const WidgetEditor = ({ widget, onUpdate, onDelete, allWidgets = [] }: WidgetEdi
             size="small"
           />
           
+          <FormControlLabel
+            control={
+              <Switch
+                checked={widget.enableApiBinding || false}
+                onChange={(e) => {
+                  onUpdate({
+                    enableApiBinding: e.target.checked
+                  });
+                }}
+                name="enableApiBinding"
+                size="small"
+              />
+            }
+            label="Enable API Binding"
+          />
+          
           {(widget.type === WidgetType.SELECT || 
             widget.type === WidgetType.MULTISELECT || 
             widget.type === WidgetType.RADIO || 
@@ -328,6 +352,28 @@ const WidgetEditor = ({ widget, onUpdate, onDelete, allWidgets = [] }: WidgetEdi
                   showRowNumbers: tableConfig.showRowNumbers,
                   showTotals: tableConfig.showTotals
                 });
+              }}
+            />
+          </AccordionDetails>
+        </Accordion>
+      )}
+      
+      {/* API Binding Configuration */}
+      {widget.enableApiBinding && (
+        <Accordion expanded={widget.enableApiBinding} onChange={() => {}}>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>API Binding Configuration</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Configure API data binding for this widget. Map API response data to widget properties.
+            </Typography>
+            
+            <WidgetApiBindingPanel
+              widgetType={widget.type}
+              apiBinding={widget.apiBinding}
+              onApiBindingChange={(apiBinding) => {
+                onUpdate({ apiBinding });
               }}
             />
           </AccordionDetails>

@@ -29,8 +29,14 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FunctionsIcon from '@mui/icons-material/Functions';
-import { TableColumn, SelectOption } from '@screen-builder/common';
+// Define TableColumn locally to avoid import issues
+// This matches the interface in the common package
+const TableColumn = null; // Just a placeholder since we're defining the type inline in JSX
 import { v4 as uuidv4 } from 'uuid';
+
+// Define SelectOption locally to avoid import issues
+// This matches the interface in the common package
+const SelectOption = null; // Just a placeholder since we're defining the type inline in JSX
 
 const columnTypes = [
   { value: 'text', label: 'Text' },

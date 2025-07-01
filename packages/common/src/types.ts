@@ -69,6 +69,48 @@ export interface WidgetDependency {
   action: 'show' | 'hide' | 'enable' | 'disable' | 'require' | 'optional';
 }
 
+export interface ApiConfig {
+  url: string;
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  headers?: Record<string, string>;
+  params?: Record<string, any>;
+  body?: any;
+  responseMapping?: {
+    // For options (dropdown, multiselect)
+    options?: {
+      path: string; // JSON path to array of options
+      valueField: string; // Field to use as value
+      labelField: string; // Field to use as label
+    };
+    // For value (textbox, number, etc.)
+    value?: {
+      path: string; // JSON path to value
+    };
+    // For table data
+    tableData?: {
+      path: string; // JSON path to array of rows
+      columns: Record<string, string>; // Map of column IDs to data fields
+    };
+  };
+  // For testing/mocking
+  mockResponse?: any;
+  useMock?: boolean;
+}
+
+export interface ApiBindingOptions {
+  apiConfig?: ApiConfig;
+  loadOnRender?: boolean;
+  refreshTriggers?: string[]; // Field IDs that trigger a refresh when changed
+  loadingState?: {
+    show: boolean;
+    message?: string;
+  };
+  errorHandling?: {
+    showError: boolean;
+    errorMessage?: string;
+  };
+}
+
 export interface Widget {
   id: string;
   type: WidgetType;
@@ -96,6 +138,8 @@ export interface Widget {
   showTotals?: boolean;
   // Dependency properties
   dependency?: WidgetDependency;
+  // API binding properties
+  apiBinding?: ApiBindingOptions;
 }
 
 export enum WidgetType {
